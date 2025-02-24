@@ -7,12 +7,10 @@ const port = 3000
 // Start the server
 const httpServer = http.createServer(app)
 httpServer.listen(port, () => {
-    console.log(`Listening on port ${port}`)
+	console.log(`Listening on port ${port}`)
 })
 
-app.use('*', (_req, res) =>
-    res.send("woo")
-)
+app.use('*', (_req, res) => res.send('woo'))
 
 // SocketIO
 import socket from './socket.js'
