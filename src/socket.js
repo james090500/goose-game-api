@@ -8,8 +8,8 @@ export const EVENTS = {
 	DISCONNECT: 'disconnect',
 	//Data
 	MOVE: 'move',
+	ROTATION: 'rotation',
 	UPDATE: 'update',
-	USERNAME: 'username'
 }
 
 export default (httpServer) => {
@@ -23,18 +23,19 @@ export default (httpServer) => {
 
 	io.on(EVENTS.CONNECTION, (socket) => {
 		//Add block
-		Blocks.addBlock(socket.id)
+		Blocks.addBlock(socket.id, socket.handshake.query.username)
 
 		//Send initial blocks
 		console.log(`${socket.id} Joined the game`)
 
-		socket.on(EVENTS.USERNAME, (data) => {
-			Blocks.updateBlock(socket.id, { username: data })
+		//Update blocks on move
+		socket.on(EVENTS.MOVE, (data) => {
+			Blocks.updateBlock(socket.id, { position: data })
 		})
 
 		//Update blocks on move
-		socket.on(EVENTS.MOVE, (data) => {
-			Blocks.updateBlock(socket.id, data)
+		socket.on(EVENTS.ROTATION, (data) => {
+			Blocks.updateBlock(socket.id, { rotation: data })
 		})
 
 		//When a user disconnects

@@ -3,19 +3,33 @@ import { io } from "./index.js"
 
 let blocks = []
 
+function sendBlocks() {
+    io.emit(EVENTS.UPDATE, blocks)
+}
+
 export default {
-    addBlock: (id) => {
+    addBlock: (id, username) => {
         blocks.push({
             id,
-            x: 0,
-            y: 0,
-            username: null,
+            username,
+            position: {
+                x: 0,
+                y: 0,
+                z: 0,
+            },
+            rotation: {
+                x: 0,
+                y: 0,
+                z: 0
+            },
         })
-        io.emit(EVENTS.UPDATE, blocks)
+
+        sendBlocks();
     },
     removeBlock: (id) => {
         blocks = blocks.filter(block => block.id !== id)
-        io.emit(EVENTS.UPDATE, blocks)
+
+        sendBlocks();
     },
     updateBlock: (id, data) => {
         let index = blocks.findIndex(block => block.id === id);
@@ -25,7 +39,8 @@ export default {
                 ...data,
             }
         }
-        io.emit(EVENTS.UPDATE, blocks)
+
+        sendBlocks();
     },
     getBlocks: () => {
         return blocks
