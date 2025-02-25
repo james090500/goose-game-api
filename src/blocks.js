@@ -14,7 +14,7 @@ export default {
             username,
             position: {
                 x: 0,
-                y: 0,
+                y: -100, // Hide the block below the ground
                 z: 0,
             },
             rotation: {
