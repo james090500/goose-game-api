@@ -1,5 +1,5 @@
-import { EVENTS } from "./socket.js"
-import { io } from "./index.js"
+import { EVENTS } from './socket.js'
+import { io } from './index.js'
 
 let blocks = []
 
@@ -20,19 +20,19 @@ export default {
             rotation: {
                 x: 0,
                 y: 0,
-                z: 0
+                z: 0,
             },
         })
 
-        sendBlocks();
+        sendBlocks()
     },
     removeBlock: (id) => {
-        blocks = blocks.filter(block => block.id !== id)
+        blocks = blocks.filter((block) => block.id !== id)
 
-        sendBlocks();
+        sendBlocks()
     },
     updateBlock: (id, data) => {
-        let index = blocks.findIndex(block => block.id === id);
+        let index = blocks.findIndex((block) => block.id === id)
         if (index !== -1) {
             blocks[index] = {
                 ...blocks[index],
@@ -40,9 +40,9 @@ export default {
             }
         }
 
-        sendBlocks();
+        sendBlocks()
     },
     getBlocks: () => {
         return blocks
-    }
+    },
 }
