@@ -9,7 +9,7 @@ export default {
             id,
             x: 0,
             y: 0,
-            username: '',
+            username: null,
         })
         io.emit(EVENTS.UPDATE, blocks)
     },

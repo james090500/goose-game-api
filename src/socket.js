@@ -9,6 +9,7 @@ export const EVENTS = {
 	//Data
 	MOVE: 'move',
 	UPDATE: 'update',
+	USERNAME: 'username'
 }
 
 export default (httpServer) => {
@@ -27,7 +28,7 @@ export default (httpServer) => {
 		//Send initial blocks
 		console.log(`${socket.id} Joined the game`)
 
-		socket.on('username', (data) => {
+		socket.on(EVENTS.USERNAME, (data) => {
 			Blocks.updateBlock(socket.id, { username: data })
 		})
 
@@ -39,6 +40,7 @@ export default (httpServer) => {
 		//When a user disconnects
 		socket.on(EVENTS.DISCONNECT, () => {
 			Blocks.removeBlock(socket.id)
+			console.log(`${socket.id} Left the game`)
 		})
 	})
 
