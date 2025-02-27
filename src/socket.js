@@ -1,5 +1,5 @@
 import { Server } from 'socket.io'
-import Blocks from './blocks.js'
+import Players from './player.js'
 
 // Events
 export const EVENTS = {
@@ -22,25 +22,25 @@ export default (httpServer) => {
     })
 
     io.on(EVENTS.CONNECTION, (socket) => {
-        //Add block
-        Blocks.addBlock(socket.id, socket.handshake.query.username)
+        //Add player
+        Players.addPlayer(socket.id, socket.handshake.query.username)
 
-        //Send initial blocks
+        //Send initial players
         console.log(`${socket.id} Joined the game`)
 
-        //Update blocks on move
+        //Update players on move
         socket.on(EVENTS.MOVE, (data) => {
-            Blocks.updateBlock(socket.id, { position: data })
+            Players.updatePlayer(socket.id, { position: data })
         })
 
-        //Update blocks on move
+        //Update players on move
         socket.on(EVENTS.ROTATION, (data) => {
-            Blocks.updateBlock(socket.id, { rotation: data })
+            Players.updatePlayer(socket.id, { rotation: data })
         })
 
         //When a user disconnects
         socket.on(EVENTS.DISCONNECT, () => {
-            Blocks.removeBlock(socket.id)
+            Players.removePlayer(socket.id)
             console.log(`${socket.id} Left the game`)
         })
     })
