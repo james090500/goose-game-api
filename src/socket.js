@@ -10,6 +10,8 @@ export const EVENTS = {
     MOVE: 'move',
     ROTATION: 'rotation',
     UPDATE: 'update',
+    //World
+    TIME: 'time'
 }
 
 export default (httpServer) => {
@@ -21,12 +23,21 @@ export default (httpServer) => {
         },
     })
 
+    // Set the world time
+    let worldTime = 6000;
+    setInterval(() => {
+        worldTime++
+    }, 50)
+
     io.on(EVENTS.CONNECTION, (socket) => {
         //Add player
         Players.addPlayer(socket.id, socket.handshake.query.username)
 
         //Send initial players
         console.log(`${socket.id} Joined the game`)
+
+        //Ensure time is synced
+        io.emit(EVENTS.TIME, worldTime)
 
         //Update players on move
         socket.on(EVENTS.MOVE, (data) => {
