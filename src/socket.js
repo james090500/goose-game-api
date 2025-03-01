@@ -27,6 +27,9 @@ export default (httpServer) => {
     let worldTime = 6000;
     setInterval(() => {
         worldTime++
+        if(worldTime > 24000) {
+            worldTime = 1
+        }
     }, 50)
 
     io.on(EVENTS.CONNECTION, (socket) => {
