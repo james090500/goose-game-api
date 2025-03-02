@@ -1,5 +1,6 @@
 import { Server } from 'socket.io'
-import Players from './player.js'
+import players from './player.js'
+import terrain from './terrain.js'
 
 // Events
 export const EVENTS = {
@@ -11,10 +12,15 @@ export const EVENTS = {
     ROTATION: 'rotation',
     UPDATE: 'update',
     //World
+    WORLD: 'world',
     TIME: 'time'
 }
 
 export default (httpServer) => {
+    console.log("Generating Terrain...")
+    const terrainData = terrain.init();
+    console.log("Done!")
+
     const io = new Server(httpServer, {
         allowEIO3: true,
         cors: {
@@ -33,28 +39,32 @@ export default (httpServer) => {
     }, 50)
 
     io.on(EVENTS.CONNECTION, (socket) => {
-        //Add player
-        Players.addPlayer(socket.id, socket.handshake.query.username)
-
         //Send initial players
         console.log(`${socket.id} Joined the game`)
+
+        //Send player the terrain data
+        socket.emit(EVENTS.WORLD, terrainData)
+
+        //Add player
+        players.addPlayer(socket.id, socket.handshake.query.username)
+
 
         //Ensure time is synced
         io.emit(EVENTS.TIME, worldTime)
 
         //Update players on move
         socket.on(EVENTS.MOVE, (data) => {
-            Players.updatePlayer(socket.id, { position: data })
+            players.updatePlayer(socket.id, { position: data })
         })
 
         //Update players on move
         socket.on(EVENTS.ROTATION, (data) => {
-            Players.updatePlayer(socket.id, { rotation: data })
+            players.updatePlayer(socket.id, { rotation: data })
         })
 
         //When a user disconnects
         socket.on(EVENTS.DISCONNECT, () => {
-            Players.removePlayer(socket.id)
+            players.removePlayer(socket.id)
             console.log(`${socket.id} Left the game`)
         })
     })
