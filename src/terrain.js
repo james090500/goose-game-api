@@ -16,13 +16,14 @@ export default {
         this.worldNoise = new Noise(65536)
         this.biomeNoise = new Noise(65536)
 
-        const worldGen = this.generateWorld()
+        this.worldGen = this.generateWorld()
+        this.worldTrees = this.generateTrees()
 
         return {
             maxHeight: this.maxHeight,
             seaHeight: this.seaHeight,
-            terrain: worldGen,
-            // trees: this.generateTrees()
+            terrain: this.worldGen,
+            trees: this.worldTrees
         }
 
     },
@@ -69,6 +70,7 @@ export default {
         return terrainResult;
     },
     generateTrees() {
+        let trees = []
         const worldSize = this.worldSize
 
         for (let x = 0; x < worldSize; x++) {
@@ -90,18 +92,21 @@ export default {
                 noiseResult = (noiseResult + 1) / 2
 
                 if (noiseResult > 0.85) {
-                    let y = getHeight(worldX, worldZ)
+                    let y = this.getHeight(worldX, worldZ)
                     if (y > this.seaHeight) {
-                        new Tree(worldX, y, worldZ)
+                        console.log(worldX, y, worldZ)
+                        trees.push(worldX, y, worldZ)
                     }
                 }
             }
         }
+
+        return trees;
     },
     getHeight(x, z) {
         const worldSize = this.worldSize
         const segments = worldSize / 16
-        const pos = this.world.geometry.attributes.position.array
+        const pos = this.worldGen
 
         // Convert world (x, z) to local grid space
         const halfSize = worldSize / 2

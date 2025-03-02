@@ -48,7 +48,6 @@ export default (httpServer) => {
         //Add player
         players.addPlayer(socket.id, socket.handshake.query.username)
 
-
         //Ensure time is synced
         io.emit(EVENTS.TIME, worldTime)
 
