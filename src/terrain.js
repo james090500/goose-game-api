@@ -94,7 +94,6 @@ export default {
                 if (noiseResult > 0.85) {
                     let y = this.getHeight(worldX, worldZ)
                     if (y > this.seaHeight) {
-                        console.log(worldX, y, worldZ)
                         trees.push(worldX, y, worldZ)
                     }
                 }
