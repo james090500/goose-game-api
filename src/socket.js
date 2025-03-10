@@ -1,5 +1,6 @@
 import { Server } from 'socket.io'
 import Player from './player.js'
+import Egg from './egg.js'
 import terrain from './terrain.js'
 
 // Events
@@ -13,7 +14,9 @@ export const EVENTS = {
     UPDATE: 'update',
     //World
     WORLD: 'world',
-    TIME: 'time'
+    TIME: 'time',
+    //Items
+    EGG: 'egg'
 }
 
 export default (httpServer) => {
@@ -43,12 +46,16 @@ export default (httpServer) => {
     // All the players
     let players = new Map()
 
+    // Items
+    let eggs = []
+
     io.on(EVENTS.CONNECTION, (socket) => {
         //Send initial players
         console.log(`${socket.id} Joined the game`)
 
         //Send all the players
         socket.emit('all_players', [...players.values()])
+        socket.emit(EVENTS.EGG, eggs)
 
         // New Player instance
         const player = new Player(socket)
@@ -71,6 +78,13 @@ export default (httpServer) => {
         socket.on(EVENTS.ROTATION, (data) => {
             player.setRotation(data)
             socket.broadcast.emit('update', player);
+        })
+
+        socket.on(EVENTS.EGG, (data) => {
+            const egg = new Egg(data)
+            eggs.push(egg)
+
+            socket.broadcast.emit(EVENTS.EGG, eggs)
         })
 
         //When a user disconnects
