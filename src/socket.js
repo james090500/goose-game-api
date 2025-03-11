@@ -46,16 +46,12 @@ export default (httpServer) => {
     // All the players
     let players = new Map()
 
-    // Items
-    let eggs = []
-
     io.on(EVENTS.CONNECTION, (socket) => {
         //Send initial players
         console.log(`${socket.id} Joined the game`)
 
         //Send all the players
         socket.emit('all_players', [...players.values()])
-        socket.emit(EVENTS.EGG, eggs)
 
         // New Player instance
         const player = new Player(socket)
@@ -80,11 +76,9 @@ export default (httpServer) => {
             socket.broadcast.emit('update', player);
         })
 
+        // Send some eggs
         socket.on(EVENTS.EGG, (data) => {
-            const egg = new Egg(data)
-            eggs.push(egg)
-
-            socket.broadcast.emit(EVENTS.EGG, eggs)
+            io.emit(EVENTS.EGG, data)
         })
 
         //When a user disconnects
