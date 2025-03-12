@@ -1,6 +1,5 @@
 import { Server } from 'socket.io'
 import Player from './player.js'
-import Egg from './egg.js'
 import terrain from './terrain.js'
 
 // Events
